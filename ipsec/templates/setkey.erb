@@ -1,0 +1,16 @@
+#!/usr/sbin/setkey -f
+
+flush;
+spdflush;
+
+<% @vpnconf.each do |conf| -%>
+<% if conf[0] != @vpnname %>
+# <%= conf[0] %>
+spdadd <%= @vpnconf[@vpnname]["vpnnet"] %> <%= conf[1]["vpnnet"] %> any -P out ipsec
+        esp/tunnel/<%= @vpnconf[@vpnname]["ip"] %>-<%= conf[1]["ip"] %>/require;
+
+spdadd <%= conf[1]["vpnnet"] %> <%= @vpnconf[@vpnname]["vpnnet"] %> any -P in ipsec
+		esp/tunnel/<%= conf[1]["ip"] %>-<%= @vpnconf[@vpnname]["ip"] %>/require;
+
+<% end %>
+<% end -%>

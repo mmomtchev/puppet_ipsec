@@ -1,0 +1,37 @@
+path pre_shared_key "/etc/racoon/psk.txt";
+path certificate "/etc/racoon/certs";
+
+padding {
+        maximum_length  20;
+        randomize       off;
+        strict_check    off;
+        exclusive_tail  off;
+}
+
+<% @vpnconf.each do |conf| -%>
+<% if conf[1]["ip"] != @ipaddress %>
+remote <%= conf[1]["ip"] %> {
+		exchange_mode main,aggressive,base;
+		passive off;
+		lifetime time 12 hour;
+		#my_identifier fqdn <%= @vpnname %>;
+		#my_identifier fqdn <%= @ipaddress %>;
+		#peers_identifier fqdn <%= conf[1]["ip"] %>;
+		#peers_identifier fqdn <%= conf[0] %>;
+		proposal {
+			encryption_algorithm aes 128;
+			hash_algorithm md5;
+			authentication_method pre_shared_key;
+			dh_group 2;
+		}
+}
+<% end %>
+<% end -%>
+
+sainfo anonymous {
+        pfs_group 2;
+        lifetime time 12 hour;
+        encryption_algorithm aes;
+        authentication_algorithm hmac_md5;
+        compression_algorithm deflate;
+}

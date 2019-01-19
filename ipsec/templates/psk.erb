@@ -1,0 +1,10 @@
+<% @vpnsecrets.each do |host| -%>
+<% if host["a"] == @vpnname -%>
+<%= host["b"] %> <%= host["s"] %>
+<%= @vpnconf[host["b"]]["ip"] %> <%= host["s"] %>
+<% end -%>
+<% if host["b"] == @vpnname -%>
+<%= host["a"] %> <%= host["s"] %>
+<%= @vpnconf[host["a"]]["ip"] %> <%= host["s"] %>
+<% end -%>
+<% end -%>
